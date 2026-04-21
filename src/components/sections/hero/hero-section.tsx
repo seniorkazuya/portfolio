@@ -35,7 +35,7 @@ export default function HeroSection() {
         alt="Kanagawa Wave"
         className={cn(
           imageBaseClasses,
-          "kanagawa-animation bottom-0 z-20 w-full opacity-10 sepia saturate-75 dark:opacity-18 dark:saturate-100",
+          "kanagawa-animation bottom-0 z-20 w-full opacity-26 sepia saturate-75 dark:opacity-18 dark:saturate-100",
         )}
         loading="eager"
         priority
@@ -49,7 +49,7 @@ export default function HeroSection() {
         alt="Pagoda"
         className={cn(
           imageBaseClasses,
-          "pagoda-animation -bottom-40 opacity-16 saturate-75 dark:opacity-28 dark:saturate-100",
+          "pagoda-animation -bottom-40 opacity-15 saturate-75 [mask-image:linear-gradient(to_bottom,black_30%,transparent_88%)] [-webkit-mask-image:linear-gradient(to_bottom,black_30%,transparent_88%)] dark:opacity-28 dark:saturate-100",
           "max-md:hidden md:max-2xl:-bottom-0",
         )}
         loading="eager"
