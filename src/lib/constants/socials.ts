@@ -3,7 +3,7 @@ import { Socials } from "@/lib/types";
 
 export const SOCIAL_LINKS: Socials<"github"> = {
   github: {
-    href: "https://www.github.com/famlov-dev",
+    href: "https://github.com/seniorkazuya",
     icon: SiGithub,
     text: "GitHub",
   },

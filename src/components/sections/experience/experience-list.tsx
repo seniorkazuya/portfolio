@@ -68,7 +68,7 @@ export const ExperienceList = () => {
 
         <ExperienceLink
           title={t("check")}
-          url="https://github.com/famlov-dev"
+          url="https://github.com/seniorkazuya"
           className={cn(
             "mt-4 self-start text-base font-medium",
             "sm:text-lg lg:mt-0 lg:self-end",
