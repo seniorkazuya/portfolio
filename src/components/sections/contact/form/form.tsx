@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { DEV_TURNSTILE_BYPASS_TOKEN } from "@/lib/constants/turnstile-dev";
 import { useForm } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -23,6 +24,8 @@ export function Form() {
   const locale = useLocale() as string;
   const { resolvedTheme } = useTheme();
 
+  const isDev = process.env.NODE_ENV === "development";
+
   const siteKey =
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE!
@@ -43,6 +46,10 @@ export function Form() {
 
   const onSubmit = async (data: EmailFormSchema) => {
     try {
+      if (isDev) {
+        await handleSubmitForm(data, DEV_TURNSTILE_BYPASS_TOKEN);
+        return;
+      }
       turnstileRef.current?.execute();
       const token = await turnstileRef.current?.getResponsePromise();
       if (!token) throw new Error("Captcha timed out");
@@ -50,7 +57,7 @@ export function Form() {
     } catch {
       toast.error(t("captcha-error"));
     } finally {
-      turnstileRef.current?.reset();
+      if (!isDev) turnstileRef.current?.reset();
     }
   };
 
@@ -88,18 +95,21 @@ export function Form() {
         <FormField key={entry} {...getFieldProps(entry, index)} />
       ))}
 
-      <Turnstile
-        ref={turnstileRef}
-        siteKey={siteKey}
-        options={{
-          execution: "execute",
-          retry: "never",
-          size: "invisible",
-          theme: resolvedTheme === "light" ? "light" : "dark",
-          language: locale,
-        }}
-        className="-mt-[20px]"
-      />
+      {!isDev && (
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={siteKey}
+          options={{
+            execution: "execute",
+            retry: "never",
+            size: "invisible",
+            appearance: "interaction-only",
+            theme: resolvedTheme === "light" ? "light" : "dark",
+            language: locale,
+          }}
+          className="-mt-[20px]"
+        />
+      )}
 
       <SubmitButton isSubmitting={isSubmitting} />
     </form>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
-import { Crimson_Pro, Noto_Sans_JP, Unbounded } from "next/font/google";
 
 import JotaiProvider from "@/components/jotai-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -17,30 +16,6 @@ export const metadata: Metadata = {
   description:
     "Portfolio of Nakamura Kazuya, AI Product Engineer from Japan with 8+ years of experience shipping LLM, RAG, and full-stack AI products.",
 };
-
-const crimson = Crimson_Pro({
-  preload: true,
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-  variable: "--font-crimson",
-  display: "swap",
-});
-
-const jp = Noto_Sans_JP({
-  preload: true,
-  weight: ["100", "300", "400", "500", "700", "900"],
-  subsets: ["latin"],
-  variable: "--font-jp",
-  display: "swap",
-});
-
-const unbounded = Unbounded({
-  preload: true,
-  variable: "--font-unbounded",
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export default async function RootLayout({
   children,
@@ -72,9 +47,7 @@ export default async function RootLayout({
       />
       <meta name="twitter:image" content="https://Nakamura.page/images/og.png" />
 
-      <body
-        className={`${jp.variable} ${unbounded.variable} ${crimson.variable} font-unbounded bg-background antialiased`}
-      >
+      <body className="font-unbounded bg-background antialiased">
         <JotaiProvider>
           <JapaneseAmbientBackground />
           <CherryBlossomTrail />

@@ -3,6 +3,7 @@
 import { Resend } from "resend";
 import { EmailFormSchema } from "@/lib/validations/form";
 import { EmailTemplate } from "@/components/email-template";
+import { DEV_TURNSTILE_BYPASS_TOKEN } from "@/lib/constants/turnstile-dev";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -15,17 +16,23 @@ const SECRET_KEY =
 
 export async function sendEmail(formData: EmailFormSchema, token: string) {
   try {
-    const verifyRes = await fetch(VERIFY_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `secret=${SECRET_KEY}&response=${token}`,
-    });
+    const isLocalDev = process.env.NODE_ENV === "development";
 
-    const verification = await verifyRes.json();
+    if (isLocalDev && token === DEV_TURNSTILE_BYPASS_TOKEN) {
+      // Avoid loading Cloudflare Turnstile in `next dev` (iframe CSP / preload console noise).
+    } else {
+      const verifyRes = await fetch(VERIFY_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${SECRET_KEY}&response=${token}`,
+      });
 
-    if (!verification.success) {
-      console.error("Turnstile verification failed:", verification["error-codes"]);
-      return false;
+      const verification = await verifyRes.json();
+
+      if (!verification.success) {
+        console.error("Turnstile verification failed:", verification["error-codes"]);
+        return false;
+      }
     }
 
     const { data, error } = await resend.emails.send({

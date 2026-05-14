@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@import "@fontsource-variable/crimson-pro/index.css";
+@import "@fontsource-variable/noto-sans-jp/index.css";
+@import "@fontsource-variable/unbounded/index.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
@@ -83,9 +87,9 @@
     --color-acc-yellow-3: #ffbf7a;
     --color-darkest: #1f1a15;
 
-    --font-unbounded: var(--font-unbounded);
-    --font-crimson: var(--font-crimson);
-    --font-jp: var(--font-jp);
+    --font-unbounded: "Unbounded Variable", system-ui, sans-serif;
+    --font-crimson: "Crimson Pro Variable", ui-serif, Georgia, serif;
+    --font-jp: "Noto Sans JP Variable", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
 
     --breakpoint-3xl: 1921px;
     --breakpoint-xs: 30rem;
