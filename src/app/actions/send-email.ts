@@ -11,7 +11,10 @@ const VERIFY_ENDPOINT = "https://challenges.cloudflare.com/turnstile/v0/siteveri
 
 const SECRET_KEY =
   process.env.NODE_ENV === "production"
-    ? process.env.CLOUDFLARE_TURNSTILE_SECRET
+    ? (
+        process.env.CLOUDFLARE_TURNSTILE_SECRET?.trim() ||
+        process.env.TURNSTILE_SECRET_KEY?.trim()
+      )
     : "1x0000000000000000000000000000000AA";
 
 export async function sendEmail(formData: EmailFormSchema, token: string) {
@@ -21,6 +24,10 @@ export async function sendEmail(formData: EmailFormSchema, token: string) {
     if (isLocalDev && token === DEV_TURNSTILE_BYPASS_TOKEN) {
       // Avoid loading Cloudflare Turnstile in `next dev` (iframe CSP / preload console noise).
     } else {
+      if (!SECRET_KEY) {
+        console.error("Turnstile: CLOUDFLARE_TURNSTILE_SECRET is not set in production.");
+        return false;
+      }
       const verifyRes = await fetch(VERIFY_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },

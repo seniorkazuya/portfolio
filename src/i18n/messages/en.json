@@ -151,7 +151,8 @@
     "success": "Message sent successfully!",
     "error": "Something went wrong! Please try sending again.",
     "captcha-error": "There was an error with the captcha. Please try again.",
-    "captcha-expired": "The captcha has expired. Please try again."
+    "captcha-expired": "The captcha has expired. Please try again.",
+    "turnstile-config-missing": "The contact form is not fully configured (Turnstile site key). Please email me directly or try again later."
   },
   "Footer": {
     "copyright": "All rights reserved.",

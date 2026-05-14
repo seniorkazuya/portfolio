@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { DEV_TURNSTILE_BYPASS_TOKEN } from "@/lib/constants/turnstile-dev";
+import { getTurnstileSiteKey } from "@/lib/env/turnstile-site-key";
 import { useForm } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -26,10 +27,8 @@ export function Form() {
 
   const isDev = process.env.NODE_ENV === "development";
 
-  const siteKey =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE!
-      : "1x00000000000000000000AA";
+  const siteKey = isDev ? "1x00000000000000000000AA" : getTurnstileSiteKey();
+  const turnstileEnabled = Boolean(siteKey);
 
   const {
     register,
@@ -50,6 +49,10 @@ export function Form() {
         await handleSubmitForm(data, DEV_TURNSTILE_BYPASS_TOKEN);
         return;
       }
+      if (!siteKey) {
+        toast.error(t("turnstile-config-missing"));
+        return;
+      }
       turnstileRef.current?.execute();
       const token = await turnstileRef.current?.getResponsePromise();
       if (!token) throw new Error("Captcha timed out");
@@ -57,7 +60,7 @@ export function Form() {
     } catch {
       toast.error(t("captcha-error"));
     } finally {
-      if (!isDev) turnstileRef.current?.reset();
+      if (!isDev && turnstileEnabled) turnstileRef.current?.reset();
     }
   };
 
@@ -95,10 +98,10 @@ export function Form() {
         <FormField key={entry} {...getFieldProps(entry, index)} />
       ))}
 
-      {!isDev && (
+      {!isDev && turnstileEnabled && (
         <Turnstile
           ref={turnstileRef}
-          siteKey={siteKey}
+          siteKey={siteKey as string}
           options={{
             execution: "execute",
             retry: "never",

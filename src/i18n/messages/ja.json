@@ -151,7 +151,8 @@
     "success": "メッセージを送信しました！",
     "error": "問題が発生しました。もう一度お試しください。",
     "captcha-error": "CAPTCHAでエラーが発生しました。もう一度お試しください。",
-    "captcha-expired": "CAPTCHAの有効期限が切れました。もう一度お試しください。"
+    "captcha-expired": "CAPTCHAの有効期限が切れました。もう一度お試しください。",
+    "turnstile-config-missing": "お問い合わせフォームの設定が未完了です（Turnstileのサイトキー）。直接メールでご連絡いただくか、しばらくしてから再度お試しください。"
   },
   "Footer": {
     "copyright": "All rights reserved.",
